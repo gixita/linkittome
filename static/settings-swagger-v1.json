@@ -1,0 +1,252 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Small games for meetings where you need to say words from a list. <br>The objective is to pronounce most of the words, or even if you dare pronounce them all. But of course, nobody except the other players can know you are playing the game, meaning that if someone detects or suspect that you are playing the game, you loose and look dumb.",
+    "version": "1.0.0",
+    "title": "Say them all",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/g4m/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Meeting games",
+      "description": "Short games to make during meetings"
+    }
+  ],
+  "paths": {
+      "/get_words/{session_uuid}": {
+        "parameters": [
+        {
+          "name": "session_uuid",
+          "in": "path",
+          "required": true,
+          "description": "Session unique identitifier",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Meeting games"
+        ],
+        "summary": "Returns the list of words for the session",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/getWords"
+            }
+          }
+        }
+      }
+    },
+      "/create_session": {
+        "post": {
+        "tags": [
+          "Meeting games"
+        ],
+        "summary": "Create a new game session, the session (uuid and its configuration) will be stored in the database. A creator token and a token for all verifiers will be created. The creator should keep the creator token secret in order to modify the word list after the session has been created. The verifiers token allows all the verifiers to acknowledge when a word has been said and specify by who.",
+        "requestBody": {
+          "description": "Provide the game session configuration",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createSessionPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Ok, a new session has been created and is stored in the database.",
+            "schema": {
+              "$ref": "#/components/schemas/session_created"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/request/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the cat that we want to match",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Book Request"
+        ],
+        "summary": "Get book request with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Book Request id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/bookRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Book request not found."
+          }
+        }
+      },
+      "put": {
+        "summary": "edit a book request by ID",
+        "tags": [
+          "Book Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Book Request id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Book Request Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/bookRequest"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/bookRequest"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Book Request by ID",
+        "tags": [
+          "Book Request"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Book Request Id",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Book Request not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "session_created": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          }
+        }
+      },
+      "createSessionPostBody": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "string",
+            "example": "all_words_together",
+            "enum": ["all_words_together", "one_word_at_the_time"]
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "getWords": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "format": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "number"
+          }
+        }
+      },
+      "bookRequests": {
+        "type": "object",
+        "properties": {
+          "bookRequest": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/bookRequest"
+            }
+          }
+        }
+      }
+    }
+  }
+}
