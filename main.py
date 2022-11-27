@@ -55,7 +55,8 @@ def create_session():
     try:
         with sqlite3.connect(db) as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO session (uuid,type_id,domain_id,verifier_token, creator_token) VALUES (?,?,?,?,?)",
+            cur.execute("INSERT INTO session (uuid,type_id,domain_id,verifier_token, creator_token, expiration_date) "
+                        "VALUES (?,?,?,?,?,date('now', '+3 days'))",
                         (session_uuid, 1, 1, verifiers_uuid, creator_uuid))
             con.commit()
             msg = "New session successfully stored"
