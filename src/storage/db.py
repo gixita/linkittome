@@ -3,7 +3,7 @@ from contextlib import closing
 
 
 def db() -> str:
-    return 'links.db'
+    return 'src/storage/links.db'
 
 
 def execute(command: str):
@@ -25,4 +25,3 @@ def db_fetchall(command: str):
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
             return cursor.execute(command).fetchall()
-
