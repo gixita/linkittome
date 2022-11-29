@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="Add project file from db viewer in gitignore">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="add source into lib directory">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/settings-swagger-v1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/conftest.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/db.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/db_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/links.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/session.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/session_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/word.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/word_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/word_vote.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/word_vote_test.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669737174451</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add source into lib directory">
+      <created>1669737420417</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1669737420417</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -283,6 +278,7 @@
     <MESSAGE value="Add .idea/ to gitignore" />
     <MESSAGE value="Implement word storage and unit tests" />
     <MESSAGE value="Add project file from db viewer in gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add project file from db viewer in gitignore" />
+    <MESSAGE value="add source into lib directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="add source into lib directory" />
   </component>
 </project>
