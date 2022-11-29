@@ -7,13 +7,13 @@ app = Flask(__name__)
 db = "links.db"
 
 def exec_db(command):
-    conn = sqlite3.connect('links.db')
+    conn = sqlite3.connect('storage/links.db')
     conn.execute(command)
     conn.close()
 
 
 def get_type_id(type):
-    conn = sqlite3.connect('links.db')
+    conn = sqlite3.connect('storage/links.db')
     conn.execute("SELECT id from type where type='"+type+"'")
     conn.close()
 
@@ -48,16 +48,13 @@ def get_words(session_uuid):
         con.close()
 
 
-@app.route("/g4m/api/v1/update_word/<session_uuid>/<creator_uuid>", methods=['POST'])
-def update_word(session_uuid, creator_uuid):
+@app.route("/g4m/api/v1/word/<session_uuid>/<creator_uuid>", methods=['POST', 'PUT'])
+def word(session_uuid, creator_uuid):
     content_type = request.headers.get('Content-Type')
-    workflow = "add"
     if content_type == 'application/json':
         json = request.json
     else:
         return {'Content-Type not supported!'}, 400
-    if json['word_id'] is not None:
-        workflow = "update"
     if json['word'] is None:
         return {'Missing data word'}, 400
     if json['ordering'] is None:
@@ -72,10 +69,13 @@ def update_word(session_uuid, creator_uuid):
                 return {'The creator token is not valid'}, 403
 
             cur = con.cursor()
-            if workflow == "add":
+            if request.method == 'POST':
                 cur.execute("INSERT INTO word (word,session_id,ordering) "
                             "VALUES (?,?,?)",
                             (json['word'], session['session_id'], json['ordering']))
+            if request.method == 'PUT':
+                cur.execute("UPDATE word SET (word=?,ordering=?) WHERE word_id=?",
+                            (json['word'],  json['ordering'], session['word_id']))
             con.commit()
     except:
         con.rollback()
