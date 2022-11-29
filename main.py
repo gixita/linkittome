@@ -7,13 +7,13 @@ app = Flask(__name__)
 db = "links.db"
 
 def exec_db(command):
-    conn = sqlite3.connect('storage/links.db')
+    conn = sqlite3.connect('lib/storage/links.db')
     conn.execute(command)
     conn.close()
 
 
 def get_type_id(type):
-    conn = sqlite3.connect('storage/links.db')
+    conn = sqlite3.connect('lib/storage/links.db')
     conn.execute("SELECT id from type where type='"+type+"'")
     conn.close()
 
@@ -123,7 +123,7 @@ def create_session():
 
 @app.route("/static/<path:path>")
 def send_static(path):
-    return send_from_directory('static', path)
+    return send_from_directory('lib/static', path)
 
 
 SWAGGER_URL = "/api/v1/docs"
