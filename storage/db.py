@@ -9,12 +9,20 @@ def db() -> str:
 def execute(command: str):
     with closing(sqlite3.connect(db())) as connection:
         with closing(connection.cursor()) as cursor:
-            return cursor.execute(command)
+            cursor.execute(command)
+            connection.commit()
 
 
 def db_fetchone(command: str):
-    return execute.fetchone()
+    with closing(sqlite3.connect(db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute(command).fetchone()
 
 
 def db_fetchall(command: str):
-    return execute.fetchall()
+    with closing(sqlite3.connect(db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute(command).fetchall()
+

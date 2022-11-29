@@ -4,13 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="Add expiration date on the session table">
-      <change afterPath="$PROJECT_DIR$/storage/db.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/db_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/session.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/session_test.py" afterDir="false" />
+    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="Add .idea/ to gitignore">
+      <change afterPath="$PROJECT_DIR$/storage/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage/word.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage/word_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage/word_vote.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storage/word_vote_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/db_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/db_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/links.db" beforeDir="false" afterPath="$PROJECT_DIR$/storage/links.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/session.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/storage/session_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/session_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +44,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/storage" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python tests.pytest all tests">
     <configuration name="flask" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="linkittome" />
@@ -180,7 +190,21 @@
       <option name="project" value="LOCAL" />
       <updated>1669550572244</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Start to split storage from the rest of the code">
+      <created>1669719161370</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1669719161370</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add .idea/ to gitignore">
+      <created>1669719265001</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669719265001</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -237,6 +261,8 @@
     <MESSAGE value="add swagger config" />
     <MESSAGE value="add swagger config file" />
     <MESSAGE value="Add expiration date on the session table" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add expiration date on the session table" />
+    <MESSAGE value="Start to split storage from the rest of the code" />
+    <MESSAGE value="Add .idea/ to gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add .idea/ to gitignore" />
   </component>
 </project>
