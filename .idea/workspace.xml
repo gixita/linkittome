@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="Add .idea/ to gitignore">
-      <change afterPath="$PROJECT_DIR$/storage/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/word.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/word_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/word_vote.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storage/word_vote_test.py" afterDir="false" />
+    <list default="true" id="d42c73bd-f7b3-4bc1-82d6-b8d5fcf5912c" name="Changes" comment="Implement word storage and unit tests">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/db_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/db_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/links.db" beforeDir="false" afterPath="$PROJECT_DIR$/storage/links.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/session.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/storage/session_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/storage/session_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669719265001</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Implement word storage and unit tests">
+      <created>1669736920393</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1669736920393</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -263,6 +261,7 @@
     <MESSAGE value="Add expiration date on the session table" />
     <MESSAGE value="Start to split storage from the rest of the code" />
     <MESSAGE value="Add .idea/ to gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add .idea/ to gitignore" />
+    <MESSAGE value="Implement word storage and unit tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement word storage and unit tests" />
   </component>
 </project>
