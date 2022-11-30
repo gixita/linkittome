@@ -1,11 +1,13 @@
 import pytest
 import session
+import word
 import db
 
 
 @pytest.fixture()
 def setup_db_examples():
     session.add_session('2', '3', '4', 1)
+    word.add_word("screw", 1, 1)
 
 
 @pytest.fixture()

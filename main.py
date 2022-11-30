@@ -14,7 +14,6 @@ def hello_world():
 @app.route("/g4m/api/v1/get_words/<session_uuid>", methods=['get'])
 def get_words(session_uuid):
     words = ""
-    print(session_uuid)
     try:
         pass
 
