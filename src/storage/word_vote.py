@@ -1,4 +1,6 @@
 from src.storage import db
+import sqlite3
+from contextlib import closing
 
 
 def add_word_vote(word_id: int, vote: int, vote_text: str) -> None:
@@ -11,8 +13,11 @@ def add_word_vote(word_id: int, vote: int, vote_text: str) -> None:
     """
     if word_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"INSERT INTO  word_vote (word_id,vote,vote_text) VALUES ('{word_id}', {vote}, '{vote_text}')"
-    db.execute(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("INSERT INTO  word_vote (word_id,vote,vote_text) VALUES (?, ?, ?)",
+                           (word_id, vote, vote_text, ))
+            connection.commit()
 
 
 def update_word_vote(vote_id: int, vote: int, vote_text: str) -> None:
@@ -25,8 +30,11 @@ def update_word_vote(vote_id: int, vote: int, vote_text: str) -> None:
     """
     if vote_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"UPDATE word_vote SET vote = '{vote}', vote_text = '{vote_text}' WHERE id = {vote_id}"
-    db.execute(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("UPDATE word_vote SET vote = ?, vote_text = ? WHERE id = ?",
+                           (vote, vote_text, vote_id, ))
+            connection.commit()
 
 
 def get_word_vote(vote_id: int) -> dict[str, any]:
@@ -39,8 +47,11 @@ def get_word_vote(vote_id: int) -> dict[str, any]:
     """
     if vote_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"SELECT word_id, vote, vote_text FROM word_vote WHERE id= {vote_id} LIMIT 1"
-    return db.db_fetchone(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT word_id, vote, vote_text FROM word_vote WHERE id= ? LIMIT 1",
+                                  (vote_id,)).fetchone()
 
 
 def get_all_votes_for_word(word_id: int) -> list[dict[str, any]]:
@@ -53,8 +64,11 @@ def get_all_votes_for_word(word_id: int) -> list[dict[str, any]]:
     """
     if word_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"SELECT word_id, vote, vote_text FROM word_vote WHERE word_id= {word_id}"
-    return db.db_fetchall(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT word_id, vote, vote_text FROM word_vote WHERE word_id= ?", (word_id,))\
+                .fetchall()
 
 
 def delete_word_vote(vote_id: int) -> None:
@@ -65,5 +79,8 @@ def delete_word_vote(vote_id: int) -> None:
     """
     if vote_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"DELETE FROM word_vote WHERE id = {vote_id}"
-    db.execute(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("DELETE FROM word_vote WHERE id = ?",
+                           (vote_id, ))
+            connection.commit()

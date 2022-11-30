@@ -12,3 +12,5 @@ def test_update_session(clean_up_db):
     session.update_session(1, 2, 3)
     session_data = session.get_session('51651')
     assert 2 == session_data['type_id']
+
+# TODO make all the other tests

@@ -1,4 +1,6 @@
 from src.storage import db
+import sqlite3
+from contextlib import closing
 
 
 def session_lifetime(s_lifetime: int) -> str:
@@ -22,45 +24,56 @@ def add_session(s_uuid: str, c_uuid: str, v_uuid: str, t_id: int, s_lifetime: in
     :param s_lifetime: number of days before the expiration of the session
     and words inside
     """
-    if t_id < 0:
-        raise ValueError("An id cannot be negative")
-    if s_uuid is None or c_uuid is None or v_uuid is None or s_uuid == "" or c_uuid == "" or v_uuid == "":
-        raise ValueError("The UUID cannot be empty")
-    command = "INSERT INTO session (uuid,type_id,domain_id,verifier_token, creator_token, expiration_date) " \
-              f"VALUES ('{s_uuid}',{t_id},{1},'{v_uuid}','{c_uuid}'," \
-              f"date('now', '{session_lifetime(s_lifetime)}'))"
-    db.execute(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("INSERT INTO session (uuid,type_id,domain_id,verifier_token, creator_token, expiration_date)"
+                           " VALUES (?, ?, ?, ?, ?, date('now', ?))",
+                           (s_uuid, t_id, 1, v_uuid, c_uuid, session_lifetime(s_lifetime),))
+            connection.commit()
 
 
-def update_session(s_id: int, t_id: int, s_lifetime: int):
-    f"""
-    For params definition, please refer to the method add_session
+def update_session(s_id: int, t_id: int, s_lifetime: int) -> None:
+    """
+    Update the session in the SQLite database
+
+    :param s_id: session primary key in the database (different from the uuid)
+    :param t_id: primary key of the type of session
+    :param s_lifetime: number of days before the expiration of the session
+    and words inside
     """
     if s_id < 0 or t_id < 0:
         raise ValueError("An id cannot be negative")
-    command = "UPDATE session SET " \
-              f"type_id = {t_id}, " \
-              f"expiration_date = date('now', '{session_lifetime(s_lifetime)}') " \
-              f"WHERE id = {s_id}"
-    db.execute(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("UPDATE session SET type_id = ?, expiration_date = date('now', ?) WHERE id = ?",
+                           (t_id, session_lifetime(s_lifetime), s_id,))
+            connection.commit()
 
 
-# Get new session
-def get_session(s_uuid: str):
-    f"""
-    Retrieve session columns as a dict of the session that match the session unique id 's_uuid'.
+def get_session(s_uuid: str) -> dict[str, any]:
+    """
+    Retrieve session columns as a dict of the session that match the session unique id s_uuid
     If the session unique id would appear multiple time in the database, this method would only send one
+
+    The returned dict contains the following keys
+
+    - 'id' primary key of the session
+    - 'uuid' unique identifier that allow the user to retrieve the session
+    - 'type_id' primary key of the session type
+    - 'domain_id' primary key of the mail domain creating a session (can be null)
+    - 'verifier_token' the uuid allowing users to vote for the session
+    - 'creator_token' the uuid allowing the creator of the session to modify the session type and the words
 
     :param s_uuid: string representing the session unique identifier
     """
-    if s_uuid is None or s_uuid == "":
-        raise ValueError("The UUID cannot be empty")
-    command = f"SELECT * FROM session WHERE uuid='{s_uuid}' LIMIT 1"
-    return db.db_fetchone(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT * FROM session WHERE uuid=? LIMIT 1", (s_uuid,)).fetchone()
 
 
 def get_type_id_from_type(type_value: str) -> dict[str, any]:
-    f"""
+    """
     Retrieve columns 'id' and 'type' as a dict for the session type that match the string 'type_value'
     It will only return one value even if that value would be entered multiple times
 
@@ -68,8 +81,10 @@ def get_type_id_from_type(type_value: str) -> dict[str, any]:
     """
     if type_value == "":
         raise ValueError("Type cannot be empty")
-    command = f"SELECT id, type FROM type WHERE type='{type_value}' LIMIT 1"
-    return db.db_fetchone(command)
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT id, type FROM type WHERE type=? LIMIT 1", (type_value,)).fetchone()
 
 
 def type_id_exists(type_id: int) -> bool:
@@ -80,5 +95,46 @@ def type_id_exists(type_id: int) -> bool:
     """
     if type_id < 0:
         raise ValueError("An id cannot be negative")
-    command = f"SELECT COUNT(*) as count FROM session_type WHERE id = {type_id}"
-    return True if db.db_fetchone(command)['count'] > 0 else False
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return True if cursor.execute("SELECT COUNT(*) as count FROM session_type WHERE id = ?",
+                                          (type_id,)).fetchone()['count'] > 0 else False
+
+
+def session_id_exists(session_id: int) -> bool:
+    """
+    Return true if session_id is an existing primary key of the table session in the db, return false otherwise
+
+    :param session_id: integer representing the primary key of the table session
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return True if cursor.execute("SELECT COUNT(*) as count FROM session WHERE id = ?",
+                                          (session_id,)).fetchone()['count'] > 0 else False
+
+
+def session_uuid_exists(session_uuid: str) -> bool:
+    """
+    Return true if session_id is an existing primary key of the table session in the db, return false otherwise
+
+    :param session_uuid: the unique identifier of the session allowing the user to retrieve it (not the primary key)
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return True if cursor.execute("SELECT COUNT(*) as count FROM session WHERE uuid = ?",
+                                          (session_uuid,)).fetchone()['count'] > 0 else False
+
+def get_all_types():
+    """
+    Return a list containing dict of the types of sessions available.
+    The dict will contain the following keys
+    - 'id' the primary key of the table session_type
+    - 'type' the text representing the type of the session
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT id, type FROM session_type WHERE 1").fetchall()
