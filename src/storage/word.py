@@ -1,4 +1,4 @@
-import db
+from src.storage import db
 
 
 def add_word(word: str, session_id: int, ordering: int):

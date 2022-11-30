@@ -1,4 +1,4 @@
-import word_vote
+from src.storage import word_vote
 
 
 def test_add_word_vote(clean_up_db, setup_db_examples):

@@ -1,4 +1,4 @@
-import word
+from src.storage import word
 
 
 def test_add_word(clean_up_db, setup_db_examples):

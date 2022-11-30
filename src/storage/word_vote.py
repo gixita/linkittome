@@ -1,4 +1,4 @@
-import db
+from src.storage import db
 
 
 def add_word_vote(word_id: int, vote: int, vote_text: str) -> None:
