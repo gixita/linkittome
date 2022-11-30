@@ -70,3 +70,15 @@ def get_type_id_from_type(type_value: str) -> dict[str, any]:
         raise ValueError("Type cannot be empty")
     command = f"SELECT id, type FROM type WHERE type='{type_value}' LIMIT 1"
     return db.db_fetchone(command)
+
+
+def type_id_exists(type_id: int) -> bool:
+    """
+    Return true if type_id is an existing primary key of the table type in the db, return false otherwise
+
+    :param type_id: integer representing the primary key of the table type
+    """
+    if type_id < 0:
+        raise ValueError("An id cannot be negative")
+    command = f"SELECT COUNT(*) as count FROM session_type WHERE id = {type_id}"
+    return True if db.db_fetchone(command)['count'] > 0 else False
