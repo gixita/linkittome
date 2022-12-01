@@ -3,7 +3,7 @@ import sqlite3
 from contextlib import closing
 
 
-def add_word(word: str, session_id: int, ordering: int):
+def add_word(word: str, session_id: int, ordering: int) -> None:
     """
     Add a new word to the session
 
@@ -18,7 +18,7 @@ def add_word(word: str, session_id: int, ordering: int):
             connection.commit()
 
 
-def update_word(word_id: int, word: str, ordering: int):
+def update_word(word_id: int, word: str, ordering: int) -> None:
     """
     See 'add_word' method for params definition
 
@@ -51,7 +51,7 @@ def get_word(word_id: int) -> dict[str, any]:
                                   (word_id,)).fetchone()
 
 
-def delete_word(word_id: int):
+def delete_word(word_id: int) -> None:
     """
     Delete from the database the word with the primary key word_id
     """
@@ -80,6 +80,9 @@ def count_words_in_session(session_id: int) -> int:
 def get_all_words(session_id: int) -> list[dict[str, any]]:
     """
     Return a list of dict with the same keys as the method 'get_word'
+
+    :param session_id: integer primary key of the session table
+    :return: a list of dict[str, any] with the keys "word", "session_id" and "ordering"
     """
     # TODO
     if session_id < 0:

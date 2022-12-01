@@ -4,7 +4,6 @@ import sqlite3
 from contextlib import closing
 
 
-
 @pytest.fixture()
 def setup_db_examples():
     session.add_session('2', '3', '4', 1, 3)

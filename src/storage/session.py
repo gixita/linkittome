@@ -50,12 +50,34 @@ def update_session(s_id: int, t_id: int, s_lifetime: int) -> None:
             connection.commit()
 
 
-def get_session(s_uuid: str) -> dict[str, any]:
+def get_session_by_id(s_id: int) -> dict[str, any]:
+    """
+    Retrieve session columns as a dict of the session that match the session primary key id
+
+    Keys in the returned dict
+
+    - 'id' primary key of the session
+    - 'uuid' unique identifier that allow the user to retrieve the session
+    - 'type_id' primary key of the session type
+    - 'domain_id' primary key of the mail domain creating a session (can be null)
+    - 'verifier_token' the uuid allowing users to vote for the session
+    - 'creator_token' the uuid allowing the creator of the session to modify the session type and the words
+
+    :param s_id: primary key of the session
+    :return: dict[str, any] with the session
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT * FROM session WHERE id=? LIMIT 1", (s_id,)).fetchone()
+
+
+def get_session_by_uuid(s_uuid: str) -> dict[str, any]:
     """
     Retrieve session columns as a dict of the session that match the session unique id s_uuid
     If the session unique id would appear multiple time in the database, this method would only send one
 
-    The returned dict contains the following keys
+    Keys in the returned dict
 
     - 'id' primary key of the session
     - 'uuid' unique identifier that allow the user to retrieve the session
@@ -65,6 +87,7 @@ def get_session(s_uuid: str) -> dict[str, any]:
     - 'creator_token' the uuid allowing the creator of the session to modify the session type and the words
 
     :param s_uuid: string representing the session unique identifier
+    :return: dict[str, any] with the session
     """
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
@@ -77,24 +100,25 @@ def get_type_id_from_type(type_value: str) -> dict[str, any]:
     Retrieve columns 'id' and 'type' as a dict for the session type that match the string 'type_value'
     It will only return one value even if that value would be entered multiple times
 
+    Example of value in the database:
+    id=1; type="all_words_together"
+
+
     :param type_value: The string value of the session type
+    :return: A dict with the keys id and type
     """
-    if type_value == "":
-        raise ValueError("Type cannot be empty")
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT id, type FROM type WHERE type=? LIMIT 1", (type_value,)).fetchone()
+            return cursor.execute("SELECT id, type FROM session_type WHERE type=? LIMIT 1", (type_value,)).fetchone()
 
 
 def type_id_exists(type_id: int) -> bool:
     """
-    Return true if type_id is an existing primary key of the table type in the db, return false otherwise
+    Return true if type_id is an existing primary key of the table session_type in the db, return false otherwise
 
     :param type_id: integer representing the primary key of the table type
     """
-    if type_id < 0:
-        raise ValueError("An id cannot be negative")
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
@@ -127,7 +151,22 @@ def session_uuid_exists(session_uuid: str) -> bool:
             return True if cursor.execute("SELECT COUNT(*) as count FROM session WHERE uuid = ?",
                                           (session_uuid,)).fetchone()['count'] > 0 else False
 
-def get_all_types():
+
+def get_session_id_from_uuid(session_uuid: str) -> int:
+    """
+    Return the id of the session uuid
+
+    :param session_uuid: the unique identifier of the session allowing the user to retrieve it (not the primary key)
+    :return: integer primary key of the session table
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            data = cursor.execute("SELECT id FROM session WHERE uuid = ?", (session_uuid,)).fetchone()
+            return data['id'] if data is not None else None
+
+
+def get_all_types() -> list[dict[str, any]]:
     """
     Return a list containing dict of the types of sessions available.
     The dict will contain the following keys
@@ -137,4 +176,4 @@ def get_all_types():
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT id, type FROM session_type WHERE 1").fetchall()
+            return cursor.execute("SELECT id, type FROM session_type WHERE 1 ORDER BY id").fetchall()
