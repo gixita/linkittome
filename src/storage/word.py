@@ -42,8 +42,6 @@ def get_word(word_id: int) -> dict[str, any]:
     - 'session_id': the session unique id (not pk)
     - 'ordering': the order of the word for display
     """
-    if word_id < 0:
-        raise ValueError("An id cannot be negative")
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
