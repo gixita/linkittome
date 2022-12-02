@@ -152,7 +152,7 @@ def test_get_type_id_from_type_with_not_existing_type_value():
         session_model.get_type_id_from_type(" k k k j h j h k")
 
 
-def get_type_id_from_type(clean_up_db, setup_db_examples):
+def test_get_type_id_from_type(clean_up_db, setup_db_examples):
     data = session_model.get_type_id_from_type("all_words_together")
     assert data['id'] == 1
     assert data['type'] == "all_words_together"

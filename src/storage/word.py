@@ -63,8 +63,6 @@ def delete_word(word_id: int) -> None:
     """
     Delete from the database the word with the primary key word_id
     """
-    if word_id < 0:
-        raise ValueError("An id cannot be negative")
     with closing(sqlite3.connect(db.db())) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute("DELETE FROM word WHERE id = ?",
@@ -76,8 +74,6 @@ def count_words_in_session(session_id: int) -> int:
     """
     Return the number of words that are linked to the session primary key 'session_id'
     """
-    if session_id < 0:
-        raise ValueError("An id cannot be negative")
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
@@ -93,9 +89,6 @@ def get_all_words(session_id: int) -> list[dict[str, any]]:
     :param session_id: integer primary key of the session table
     :return: a list of dict[str, any] with the keys "word", "session_id" and "ordering"
     """
-    # TODO
-    if session_id < 0:
-        raise ValueError("An id cannot be negative")
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:

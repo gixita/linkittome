@@ -18,7 +18,11 @@ def test_session_lifetime_with_valid_data():
     if not session.session_lifetime(5) == "+5 days":
         raise ValueError("The string output of the session lifetime do not match the requirements")
 
-# TODO get_session_by_id
+
+def test_get_session_by_id():
+    assert session.get_session_by_id(0) is None
+    assert len(session.get_session_by_id(1)) is not None
+    assert session.get_session_by_id(1)['id'] == 1
 
 
 def test_get_type_id_from_type():
@@ -30,7 +34,7 @@ def test_type_id_exists(clean_up_db, setup_db_examples):
     if not session.type_id_exists(1):
         raise IndexError("The id 1 should exist in the database")
     if session.type_id_exists(999):
-        raise IndexError("The id 999 should NOT exist in the database")
+        raise IndexError("The id 999 should NOT exist in the test database")
 
 
 def test_session_id_exists():
@@ -39,12 +43,8 @@ def test_session_id_exists():
 
 
 def test_session_uuid_exists():
-    if not session.session_uuid_exists("2"):
-        raise IndexError("The uuid '2' should exist in the database")
-    if session.session_uuid_exists("s k l d j f l k j d"):
-        raise IndexError("Random uuid should NOT exist in the database")
-
-# TODO def test_session_uuid_exists(session_uuid: str) -> bool:
+    assert session.session_uuid_exists("2")
+    assert not session.session_uuid_exists("5")
 
 
 def test_get_all_types():
