@@ -34,6 +34,7 @@ def test_delete_word(clean_up_db, setup_db_examples):
 def test_count_words_in_session(clean_up_db, setup_db_examples):
     word.add_word("screw", 1, 1)
     assert 3 == word.count_words_in_session(1)
+    assert 0 == word.count_words_in_session(2)
 
 
 def test_get_all_words(clean_up_db, setup_db_examples):

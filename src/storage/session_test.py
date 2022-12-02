@@ -49,7 +49,7 @@ def test_session_uuid_exists():
 
 def test_get_all_types():
     data = session.get_all_types()
-    if len(data) != 2:
+    if len(data) != 3:
         raise Exception("The correct types are not retrieved")
     if data[0]['id'] != 1:
         raise ValueError("The order of the data is not correct")

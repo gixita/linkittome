@@ -46,3 +46,8 @@ def test_delete_word_vote(clean_up_db, setup_db_examples):
     data = word_vote.get_all_votes_for_word(1)
     assert 1 == len(data)
     assert 3 == data[0]['vote']
+
+def test_count_votes_in_word(clean_up_db, setup_db_examples):
+    word_vote.add_word_vote(1, 1, "Nice job")
+    assert 1 == word_vote.count_votes_in_word(1)
+    assert 0 == word_vote.count_votes_in_word(2)

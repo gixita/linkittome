@@ -41,6 +41,7 @@ def get_word_vote(vote_id: int) -> dict[str, any]:
     """
     Retrieve a dict containing the vote with the vote primary key 'vote_id'.
     The dict contains the following keys
+    - 'id' the primary key of the table word_vote
     - 'word_id' the primary key of the word
     - 'vote' integer representing the user vote for the vote
     - 'vote_text' a string that can be added to a vote
@@ -50,7 +51,7 @@ def get_word_vote(vote_id: int) -> dict[str, any]:
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT word_id, vote, vote_text FROM word_vote WHERE id= ? LIMIT 1",
+            return cursor.execute("SELECT id, word_id, vote, vote_text FROM word_vote WHERE id= ? LIMIT 1",
                                   (vote_id,)).fetchone()
 
 
@@ -84,3 +85,30 @@ def delete_word_vote(vote_id: int) -> None:
             cursor.execute("DELETE FROM word_vote WHERE id = ?",
                            (vote_id, ))
             connection.commit()
+
+
+def vote_id_exists(vote_id: int) -> bool:
+    """
+    Check if the vote primary key vote_id exists in the database
+
+    :param vote_id: integer primary key of the table word_vote
+    :return: boolean, true if the primary key exists
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            data = cursor.execute("SELECT id FROM word_vote WHERE id= ? LIMIT 1",
+                                  (vote_id,)).fetchone()
+            return False if data is None else True
+
+
+def count_votes_in_word(word_id: int) -> int:
+    """
+    Return the number of votes that are linked to the word primary key 'word_id'
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            data = cursor.execute("SELECT COUNT(*) as count FROM word_vote WHERE word_id = ?",
+                                  (word_id,)).fetchone()['count']
+            return 0 if data is None else data

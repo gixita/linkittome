@@ -26,8 +26,6 @@ def update_word(word_id: int, word: str, ordering: int) -> None:
     :param word: string of one of the word of the session
     :param ordering: integer representing the order in which the words are displayed
     """
-    if word is None or word_id < 0:
-        raise ValueError("Data incorrect")
     with closing(sqlite3.connect(db.db())) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute("UPDATE word SET word = ?, ordering = ? WHERE id = ?",
@@ -47,6 +45,18 @@ def get_word(word_id: int) -> dict[str, any]:
         with closing(connection.cursor()) as cursor:
             return cursor.execute("SELECT word, session_id, ordering FROM word WHERE id= ? LIMIT 1",
                                   (word_id,)).fetchone()
+
+
+def word_id_exists(word_id: int) -> bool:
+    """
+    Return the number of words that are linked to the session primary key 'session_id'
+    """
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            data = cursor.execute("SELECT id FROM word WHERE id= ? LIMIT 1",
+                                  (word_id,)).fetchone()
+            return False if data is None else True
 
 
 def delete_word(word_id: int) -> None:
@@ -71,8 +81,9 @@ def count_words_in_session(session_id: int) -> int:
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT COUNT(*) as count FROM word WHERE session_id = ?",
+            data = cursor.execute("SELECT COUNT(*) as count FROM word WHERE session_id = ?",
                                   (session_id,)).fetchone()['count']
+            return 0 if data is None else data
 
 
 def get_all_words(session_id: int) -> list[dict[str, any]]:
@@ -88,5 +99,6 @@ def get_all_words(session_id: int) -> list[dict[str, any]]:
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT word, session_id, ordering FROM word WHERE session_id = ?", (session_id,))\
+            return cursor.execute("SELECT id, word, session_id, ordering FROM word WHERE session_id = ?",
+                                  (session_id,))\
                 .fetchall()

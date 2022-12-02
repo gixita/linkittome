@@ -223,5 +223,5 @@ def test_get_session_id_from_uuid():
 
 def test_get_all_types(clean_up_db, setup_db_examples):
     data = session_model.get_all_types()
-    assert len(data) == 2
+    assert len(data) == 3
     assert data[0]['type'] == "all_words_together"
