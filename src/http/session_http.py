@@ -50,15 +50,15 @@ def update_session(session_uuid: str, creator_uuid: str):
     """
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
-        json = request.json
+        json_payload = request.json
     else:
         return jsonify({'error': 'Content-Type not supported'}), 400
     if creator_uuid is None:
         return jsonify({'error': "You are not authorized to update this session"}), 403
     try:
-        quality.check_type_id(json)
+        quality.check_type_id(json_payload)
         session_id = session_model.get_session_id_from_uuid(session_uuid)
-        session_model.update_session(session_id, json['type_id'])
+        session_model.update_session(session_id, json_payload['type_id'])
         return jsonify(session_model.get_session_by_creator_uuid(session_uuid, creator_uuid)), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 401

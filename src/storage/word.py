@@ -36,6 +36,7 @@ def update_word(word_id: int, word: str, ordering: int) -> None:
 def get_word(word_id: int) -> dict[str, any]:
     """
     Return a dict of the word data with the following keys :
+    - 'word_id': primary key of word
     - 'word': the string of the word
     - 'session_id': the session unique id (not pk)
     - 'ordering': the order of the word for display
@@ -43,7 +44,7 @@ def get_word(word_id: int) -> dict[str, any]:
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT word, session_id, ordering FROM word WHERE id= ? LIMIT 1",
+            return cursor.execute("SELECT id as word_id, word, session_id, ordering FROM word WHERE id= ? LIMIT 1",
                                   (word_id,)).fetchone()
 
 
@@ -92,6 +93,6 @@ def get_all_words(session_id: int) -> list[dict[str, any]]:
     with closing(sqlite3.connect(db.db())) as connection:
         connection.row_factory = sqlite3.Row
         with closing(connection.cursor()) as cursor:
-            return cursor.execute("SELECT id, word, session_id, ordering FROM word WHERE session_id = ?",
+            return cursor.execute("SELECT id as word_id, word, session_id, ordering FROM word WHERE session_id = ?",
                                   (session_id,))\
                 .fetchall()

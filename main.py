@@ -1,11 +1,12 @@
 from flask import Flask, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
-from src.http import session_http, auth_http
+from src.http import session_http, auth_http, word_http
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
 app.register_blueprint(session_http.session_http)
 app.register_blueprint(auth_http.auth_http)
+app.register_blueprint(word_http.word_http)
 
 
 @app.route("/static/<path:path>")

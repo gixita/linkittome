@@ -152,6 +152,8 @@ def get_session_by_creator_uuid(session_uuid: str, creator_uuid: str) -> dict[st
 
     :param session_uuid: string representing the session unique identifier
     :param creator_uuid: string representing the creator token to modify the session
+
+    :raises ValueError: creator_uuid must be valid
     """
     check_quality_uuid(session_uuid)
     check_quality_uuid(creator_uuid)

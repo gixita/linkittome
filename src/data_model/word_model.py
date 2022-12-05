@@ -12,6 +12,11 @@ def quality_check_word_id(word_id: int, disable_exists_check=False) -> None:
             raise IndexError("Word id do not exists in the database")
 
 
+def quality_check_word_id_belong_to_session_id(word_id: int, session_id: int) -> None:
+    if session_id != get_word_by_id(word_id)['session_id']:
+        raise IndexError("The word don't belong to your session")
+
+
 def quality_check_word_value(word_value: str) -> None:
     if not isinstance(word_value, str):
         raise TypeError("word_value argument has an incorrect type")
@@ -47,23 +52,26 @@ def add_word(word_value: str, session_id: int, ordering: int) -> None:
     word.add_word(word_value, session_id, ordering)
 
 
-def update_word(word_id: int, word_value: str, ordering: int) -> None:
+def update_word(word_id: int, word_value: str, ordering: int, session_id: int) -> None:
     """
     Update the word in the database
 
     :param word_id: primary key of the table word
     :param word_value: string of one of the word of the session
     :param ordering: integer representing the order in which the words are displayed
+    :param session_id: primary key of the session
     """
     quality_check_word_id(word_id)
     quality_check_word_value(word_value)
     quality_check_ordering(ordering)
+    quality_check_word_id_belong_to_session_id(word_id, session_id)
     word.update_word(word_id, word_value, ordering)
 
 
 def get_word_by_id(word_id: int) -> dict[str, any]:
     """
     Return a dict of the word data with the following keys :
+    - 'word_id': primary key of word
     - 'word': the string of the word
     - 'session_id': the session unique id (not pk)
     - 'ordering': the order of the word for display
@@ -83,11 +91,12 @@ def word_id_exists(word_id: int) -> bool:
     return word.word_id_exists(word_id)
 
 
-def delete_word(word_id: int) -> None:
+def delete_word(word_id: int, session_id: int) -> None:
     """
     Delete the word with the primary key word_id
     """
     quality_check_word_id(word_id)
+    quality_check_word_id_belong_to_session_id(word_id, session_id)
     word.delete_word(word_id)
 
 

@@ -60,7 +60,7 @@ def test_add_word(clean_up_db, setup_db_examples):
 
 def test_update_word(clean_up_db, setup_db_examples):
     word_model.add_word('rose', 1, 0)
-    word_model.update_word(3, "New value", 2)
+    word_model.update_word(3, "New value", 2, 1)
     data = word_model.get_word_by_id(3)
     assert data is not None
     assert data['word'] == "New value"
@@ -81,8 +81,15 @@ def test_word_id_exists(clean_up_db, setup_db_examples):
 
 def test_delete_word(clean_up_db, setup_db_examples):
     word_model.add_word('rose', 1, 0)
-    word_model.delete_word(3)
+    word_model.delete_word(3, 1)
     assert word_model.count_words_in_session(1) == 2
+
+
+def test_delete_word_with_wrong_session(clean_up_db, setup_db_examples):
+    word_model.add_word('rose', 1, 0)
+    with pytest.raises(IndexError, match="The word don't belong to your session"):
+        word_model.delete_word(3, 2)
+    assert word_model.count_words_in_session(1) == 3
 
 
 def test_count_words_in_session(clean_up_db, setup_db_examples):
@@ -92,7 +99,7 @@ def test_count_words_in_session(clean_up_db, setup_db_examples):
 def test_get_all_words(clean_up_db, setup_db_examples):
     data = word_model.get_all_words(1)
     assert len(data) == 2
-    assert data[0]['id'] == 1
+    assert data[0]['word_id'] == 1
     assert data[0]['word'] == "screw"
     assert data[0]['session_id'] == 1
     assert data[0]['ordering'] == 1
