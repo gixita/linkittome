@@ -95,6 +95,24 @@ def get_session_by_uuid(s_uuid: str) -> dict[str, any]:
             return cursor.execute("SELECT * FROM session WHERE uuid=? LIMIT 1", (s_uuid,)).fetchone()
 
 
+def get_type_by_id(type_id: int) -> dict[str, str]:
+    """
+    Retrieve column 'type' as a dict for the session type primary key that match the int 'type_id'
+    It will only return one value even if that value would be entered multiple times
+
+    Example of value in the database:
+    id=1; type="all_words_together"
+
+
+    :param type_id: integer primary key of the table session_type
+    :return: A dict with the key type
+    """
+    # TODO make unit tests for it
+    with closing(sqlite3.connect(db.db())) as connection:
+        connection.row_factory = sqlite3.Row
+        with closing(connection.cursor()) as cursor:
+            return cursor.execute("SELECT type FROM session_type WHERE id=? LIMIT 1", (type_id,)).fetchone()
+
 def get_type_id_from_type(type_value: str) -> dict[str, any]:
     """
     Retrieve columns 'id' and 'type' as a dict for the session type that match the string 'type_value'

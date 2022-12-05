@@ -11,14 +11,22 @@ def session_lifetime(days=3) -> int:
     return days
 
 
-def add_session(type_id: int, days=3):
+def add_session(type_id: int, days=3) -> dict[str, str | int]:
     """
     API facing function
+
     Create a new session by defining a type.
     The primary key 'type_id' needs to exist in the database otherwise it will throw an IndexError error
 
     :param type_id: primary key of the type id
     :param days: number of days before the expiration of the session
+    :raises TypeError type_id: The type_id should be an int
+    :raises TypeError days: The days should be an int
+    :raises TypeError type_id: The type id should not be negative
+    :raises ValueError type_id: The number of days after which the session will expire cannot be negative
+    :raises IndexError type_id: Type id is not existing in the database
+
+    :return: dict with the following keys: session_uuid, creator_uuid, verifiers_uuid, type_id
     """
     session_uuid = str(uuid.uuid4())
     creator_uuid = str(uuid.uuid4())
@@ -40,7 +48,7 @@ def add_session(type_id: int, days=3):
             'type_id': type_id}
 
 
-def update_session(session_id: int, type_id: int, s_lifetime: int) -> None:
+def update_session(session_id: int, type_id: int, s_lifetime=3) -> None:
     """
     API facing function
     Update an existing function. The session, creator and verifier uuid are immutable and so cannot be modified.
@@ -92,29 +100,68 @@ def get_session_by_id(session_id: int) -> dict[str, any]:
     return data
 
 
+def check_quality_uuid(generic_uuid: str) -> None:
+    if not isinstance(generic_uuid, str):
+        raise TypeError("The argument should be an string")
+    if generic_uuid == "":
+        raise ValueError("The session uuid should not be empty")
+
+
+def check_quality_session_uuid_exists(generic_uuid: str) -> None:
+    if not session.session_uuid_exists(generic_uuid):
+        raise IndexError("The session do not exist in the database")
+
+
 def get_session_by_uuid(session_uuid: str) -> dict[str, any]:
     """
     Retrieve session columns as a dict of the session that match the session unique id s_uuid
     If the session unique id would appear multiple time in the database, this method would only send one
+    The session unique id only allow the user to view the public information and cannot access the data related to
+    the creator.
 
     The returned dict contains the following keys
 
-    - 'id' primary key of the session
-    - 'uuid' unique identifier that allow the user to retrieve the session
-    - 'type_id' primary key of the session type
+    - 'id' the primary key of the session
+    - 'session_uuid' unique identifier that allow the user to retrieve the session
+    - 'type' String containing the session type
     - 'domain_id' primary key of the mail domain creating a session (can be null)
-    - 'verifier_token' the uuid allowing users to vote for the session
-    - 'creator_token' the uuid allowing the creator of the session to modify the session type and the words
 
     :param session_uuid: string representing the session unique identifier
     """
-    if not isinstance(session_uuid, str):
-        raise TypeError("The argument should be an string")
-    if session_uuid is "":
-        raise ValueError("The session uuid should not be empty")
-    if not session.session_uuid_exists(session_uuid):
-        raise IndexError("The session do not exist in the database")
-    return session.get_session_by_uuid(session_uuid)
+    check_quality_uuid(session_uuid)
+    check_quality_session_uuid_exists(session_uuid)
+    data = session.get_session_by_uuid(session_uuid)
+    type_value = session.get_type_by_id(data['type_id'])['type']
+    return {'id': data['id'], 'session_uuid': data['uuid'], 'type': type_value, 'domain_id': data['domain_id']}
+
+
+def get_session_by_creator_uuid(session_uuid: str, creator_uuid: str) -> dict[str, any]:
+    """
+    Retrieve session columns as a dict of the session that match the session unique id s_uuid
+    If the session unique id would appear multiple time in the database, this method would only send one
+    The session unique id in combination with the creator uuid get access to all session information.
+
+    The returned dict contains the following keys
+
+    - 'id' the primary key of the session
+    - 'session_uuid' unique identifier that allow the user to retrieve the session
+    - 'type' String containing the session type
+    - 'domain_id' primary key of the mail domain creating a session (can be null)
+    - 'verifier_uuid' the uuid allowing users to vote for the session
+    - 'creator_uuid' the uuid allowing the creator of the session to modify the session type and the words
+
+    :param session_uuid: string representing the session unique identifier
+    :param creator_uuid: string representing the creator token to modify the session
+    """
+    check_quality_uuid(session_uuid)
+    check_quality_uuid(creator_uuid)
+    check_quality_session_uuid_exists(session_uuid)
+    data = session.get_session_by_uuid(session_uuid)
+    if data['creator_token'] != creator_uuid:
+        raise ValueError("The creator token is not valid")
+    type_value = session.get_type_by_id(data['type_id'])['type']
+    return {'id': data['id'], 'session_uuid': data['uuid'], 'verifier_uuid': data['verifier_token'],
+            'creator_uuid': data['creator_token'], 'type': type_value, 'domain_id': data['domain_id']}
 
 
 def get_type_id_from_type(type_value: str) -> dict[str, any]:

@@ -129,11 +129,19 @@ def test_get_session_by_uuid_with_not_existing_session_uuid():
 def test_get_session_by_uuid():
     data = session_model.get_session_by_uuid('2')
     assert data['id'] == 1
-    assert data['uuid'] == "2"
-    assert data['type_id'] == 1
+    assert data['session_uuid'] == "2"
+    assert data['type'] == "all_words_together"
     assert data['domain_id'] == 1
-    assert data['verifier_token'] != "" and data['verifier_token'] is not None
-    assert data['creator_token'] != "" and data['creator_token'] is not None
+
+
+def test_get_session_by_creator_uuid():
+    data = session_model.get_session_by_creator_uuid('2', '3')
+    assert data['id'] == 1
+    assert data['session_uuid'] == "2"
+    assert data['type'] == 'all_words_together'
+    assert data['domain_id'] == 1
+    assert data['verifier_uuid'] != "" and data['verifier_uuid'] is not None
+    assert data['creator_uuid'] != "" and data['creator_uuid'] is not None
 
 
 # noinspection PyTypeChecker

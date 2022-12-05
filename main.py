@@ -1,33 +1,11 @@
 from flask import Flask, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
+from src.http import session_http, auth_http
 
 app = Flask(__name__)
-
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-
-@app.route("/g4m/api/v1/get_words/<session_uuid>", methods=['get'])
-def get_words(session_uuid):
-    try:
-        pass
-    except:
-        msg = "error"
-        return {msg}, 400
-    finally:
-        return {}, 200
-
-
-@app.route("/g4m/api/v1/word/<session_uuid>/<creator_uuid>", methods=['POST', 'PUT'])
-def word(session_uuid, creator_uuid):
-    pass
-
-
-@app.route("/g4m/api/v1/create_session", methods=['POST'])
-def create_session():
-    pass
+app.config['SECRET_KEY'] = 'your secret key'
+app.register_blueprint(session_http.session_http)
+app.register_blueprint(auth_http.auth_http)
 
 
 @app.route("/static/<path:path>")

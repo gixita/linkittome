@@ -2,11 +2,12 @@ from src.data_model import word_model, session_model
 from src.storage import word_vote
 from src.errors.rules_errors import OneVotePerWordError, ImmutableVoteError
 
+# TODO add the user uuid in the vote
+
 
 def hardcoded_rules(type_id: int) -> dict[str, bool]:
     """
     Temporary solution to enumerate multiple rules in the future (currently only two rules).
-    TODO
     The rules should be part of the session_type table in the future. But the type should have
     dedicated files and tests for it (not linked to the session files)
 

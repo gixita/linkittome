@@ -4,11 +4,12 @@ import sqlite3
 from contextlib import closing
 
 
-
 @pytest.fixture()
 def setup_db_examples():
     session.add_session('2', '3', '4', 1, 3)
-    session.add_session('2', '3', '4', 1, 3)
+    session.add_session("ca9366d7-7e20-4148-9e6f-ebb92d1436a8",
+                        "b7a0a52c-86eb-4e5c-a9e2-ba8194e2c571",
+                        "ae2a5d59-3158-4132-a80f-6a0ab682ba2b", 1, 3)
     word.add_word("screw", 1, 1)
     word.add_word("screwdriver", 1, 2)
 
