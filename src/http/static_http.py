@@ -5,7 +5,7 @@ static_http = Blueprint('static_http', __name__, url_prefix='')
 
 @static_http.route("/static/<path:path>")
 def send_static(path):
-    return send_from_directory('src/static', path)
+    return send_from_directory(path)
 
 
 SWAGGER_URL = "/api/v1/docs"

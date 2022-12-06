@@ -6,7 +6,8 @@ from src.frontend import home
 
 
 template_dir = os.path.abspath('./src/frontend/templates')
-app = Flask(__name__, template_folder=template_dir)
+static_dir = os.path.abspath('./src/static')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
 app.config['SECRET_KEY'] = 'your secret key'
 app.register_blueprint(session_http.session_http)

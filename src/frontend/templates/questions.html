@@ -7,11 +7,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
+
 <section class="section">
+    <div class="container mb-6">
+<nav class="level">
+  <!-- Left side -->
+  <div class="level-left">
+    <div class="level-item">
+                      <h1 class="title">
+                    Add new questions
+                </h1>
+      </div>
+    </div>
+
+
+  <!-- Right side -->
+  <div class="level-right">
+                <div class="buttons">
+                    <button class="button is-info is-light">Settings</button>
+                    <button class="button is-info is-light">Preview</button>
+                </div>
+  </div>
+</nav>
+
+
+
+</div>
+
     <div class="container">
-        <h1 class="title">
-            Add new questions
-        </h1>
         <div class="box">
             <div class="columns">
                 <div class="column is-11">
@@ -23,14 +46,20 @@
                     </div>
                 </div>
                 <div class="column">
-                    <figure class="image is-32x32">
-                        <img src="static/edit.svg">
-                    </figure>
+                    <div class="block">
+                        <div class="buttons">
+                            <button class="button is-light">
+                                Edit
+                            </button>
+                            <button class="button is-light">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
                 </div>
-
             </div>
-
         </div>
+
         <form class="box">
             <div class="field">
                 <label class="label">Type of question</label>
