@@ -58,3 +58,9 @@ def check_word_id(json_payload: dict[str, any]) -> None:
         raise TypeError('The field word_id should be an int')
     elif json_payload['word_id'] <= 0:
         raise ValueError("The field word_id should be greater than 0")
+
+
+def check_content_type_headers(headers: dict[str, any]) -> None:
+    content_type = headers.get('Content-Type')
+    if content_type != 'application/json':
+        raise KeyError("Headers content type must be application/json")

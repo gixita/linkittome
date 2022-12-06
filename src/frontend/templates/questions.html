@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Add new questions
+        </h1>
+        <div class="box">
+            <div class="columns">
+                <div class="column is-11">
+                    <div class="block">
+                        You think we should continue the project with the current structure.
+                    </div>
+                    <div class="buttons">
+                        <button class="button is-info is-light">Yes or no</button>
+                    </div>
+                </div>
+                <div class="column">
+                    <figure class="image is-32x32">
+                        <img src="static/edit.svg">
+                    </figure>
+                </div>
+
+            </div>
+
+        </div>
+        <form class="box">
+            <div class="field">
+                <label class="label">Type of question</label>
+                <div class="control">
+                    <div class="select">
+                        <select>
+                            <option>Yes or no</option>
+                            <option>Rating</option>
+                            <option>Multiple choice</option>
+                            <option>Picture choice</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="button is-primary">Create</button>
+        </form>
+
+    </div>
+</section>
+</body>
+</html>

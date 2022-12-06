@@ -48,14 +48,11 @@ def update_session(session_uuid: str, creator_uuid: str):
     :raise HTTPCODE_403: creator uuid is not valid
     :return: HTTPCODE_200 success
     """
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        json_payload = request.json
-    else:
-        return jsonify({'error': 'Content-Type not supported'}), 400
     if creator_uuid is None:
-        return jsonify({'error': "You are not authorized to update this session"}), 403
+        return jsonify({'error': "Creator uuid missing"}), 403
     try:
+        quality.check_content_type_headers(request.headers)
+        json_payload = request.json
         quality.check_type_id(json_payload)
         session_id = session_model.get_session_id_from_uuid(session_uuid)
         session_model.update_session(session_id, json_payload['type_id'])

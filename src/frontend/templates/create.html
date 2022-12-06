@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create new feedback</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">
+            Create a new feedback
+        </h1>
+        <p class="subtitle">
+            Let's give it a good title and description.
+        </p>
+
+        <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Title of the general feedback">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+                <textarea class="textarea" placeholder="Short description of the feedback"></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Type of feedback</label>
+            <div class="control">
+                <div class="select">
+                    <select>
+                        <option>Organize event</option>
+                        <option>Survey</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    I agree to the <a href="#">terms and conditions</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" onclick="location.href='questions'">Get started</button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
